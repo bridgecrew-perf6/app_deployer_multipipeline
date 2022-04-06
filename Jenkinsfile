@@ -47,7 +47,7 @@ podTemplate(yaml: """
       ws() {
           container('tools') {
             // sh 'sleep 120'
-            sh 'terraform apply -var-file envs/${EnvironmentToBuild}.tfvars -auto-approve'
+             sh 'terraform apply -var-file envs/${EnvironmentToBuild}.tfvars -auto-approve'
             }
         }
     }
