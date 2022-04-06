@@ -1,0 +1,6 @@
+google_domain_name = "kuralaws.net"
+image              = "docker.kuralaws.net/nodejs"
+tag                = "1.0.0"
+namespace          = "canada-dev"
+deployment_name    = "nodejs"
+port               = "8080"

@@ -1,6 +1,6 @@
-module "artemis-terraform-helm" {
+module "nodejs-terraform-helm" {
   source               = "./modules/terraform-helm/"
-  deployment_name      = "artemis"
+  deployment_name      = "nodejs"
   deployment_namespace = var.namespace
   deployment_path      = "charts/artemis/"
   values_yaml          = <<EOF
@@ -14,7 +14,7 @@ imagePullSecrets:
 
 service:
   type: ClusterIP
-  port: 5000
+  port: 8080
 
 ingress:
   enabled: true
