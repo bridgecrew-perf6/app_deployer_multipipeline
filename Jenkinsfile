@@ -1,24 +1,28 @@
-podTemplate(yaml: '''
+def tools_image       = "image: docker.kuralaws.net/tools:latest"
+def github_credential = "github_token"
+def github_repo_url   = "https://github.com/kural82/app_deployer_multipipeline.git"
+
+podTemplate(yaml: """
     apiVersion: v1
     kind: Pod
     spec:
       containers:
       - name: tools
-        image: docker.kuralaws.net/tools:latest
+        image: ${tools_image}
         command:
         - sleep
         args:
         - 99d
       imagePullSecrets:
       - name: regcred
-''') {
-  properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), parameters([choice(choices: ['dev', 'qa', 'stage', 'prod'], description: 'Please provided EnvironmentToBuild', name: 'EnvironmentToBuild')])])  
+""") {
   
+
   node(POD_LABEL) {
     stage('Clone') {
       ws() {
           container('tools') {
-          checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github_token', url: 'https://github.com/kural82/app_deployer.git']]])
+          checkout([$class: 'GitSCM', branches: [[name: "BRANCH_NAME"]], extensions: [], userRemoteConfigs: [[credentialsId: "$(github_credential)", url: "$(github_repo_url)"]]])
             }
         }
     }
@@ -34,8 +38,8 @@ podTemplate(yaml: '''
     stage('Init') {
       ws() {
           container('tools') {
-          sh 'bash setenv.sh envs/${EnvironmentToBuild}.tfvars'
-          sh 'terraform init'
+          sh "bash setenv.sh envs/${BRANCH_NAME}.tfvars"
+          sh "terraform init"
             }
         }
     }
